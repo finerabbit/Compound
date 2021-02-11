@@ -1196,3 +1196,21 @@ const abiJson = [
 ];
 const compoundCEthContract = new web3.eth.Contract(abiJson, contractAddress);
 
+const ethDecimals = 18;
+
+const main = async function() {
+    let ethBalance = await web3.eth.getBalance(myWalletAddress) / Math.pow(10, ethDecimals);
+    
+    console.log("My wallet's ETH balance:", ethBalance, '\n');
+    console.log('Supplying ETH to the Compound Protocol...', '\n');
+    
+    // Mint some cETH by supplying ETH to the Compound Protocol
+    await compoundCEthContract.methods.mint().send({
+        from: myWalletAddress,
+        gasLimit: web3.utils.toHex(150000),
+        gasPrice: web3.utils.toHex(20000000000),
+        value: web3.utils.toHex(web3.utils.toWei('1', 'ether'))
+    });
+
+    console.log('cETH "Mint" operation successful.', '\n');
+}
