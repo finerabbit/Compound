@@ -22,14 +22,19 @@ const main = async function() {
     console.log('Supplying ETH to the Compound Protocol...', '\n');
     
     // Mint some cETH by supplying ETH to the Compound Protocol
-    await compoundCEthContract.methods.mint().send({
+    /*await compoundCEthContract.methods.mint().send({
         from: myWalletAddress,
         gasLimit: web3.utils.toHex(150000),
         gasPrice: web3.utils.toHex(20000000000),
         value: web3.utils.toHex(web3.utils.toWei('1', 'ether'))
-    });
+    });*/
 
     console.log('cETH "Mint" operation successful.', '\n');
+
+    const balanceOfUnderlying = web3.utils.toBN(await compoundCEthContract.methods
+        .balanceOfUnderlying(myWalletAddress).call()) / Math.pow(10, ethDecimals);
+    
+    console.log("ETH supplied to the Compound Protocol:", balanceOfUnderlying);
 }
 
 main().catch((err) => {
