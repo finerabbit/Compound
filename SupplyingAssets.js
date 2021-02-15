@@ -35,6 +35,10 @@ const main = async function() {
         .balanceOfUnderlying(myWalletAddress).call()) / Math.pow(10, ethDecimals);
     
     console.log("ETH supplied to the Compound Protocol:", balanceOfUnderlying);
+
+    let cTokenBalance = await compoundCEthContract.methods.balanceOf(myWalletAddress).call() / 1e8;
+
+    console.log("My wallet's cETH Token Balance:", cTokenBalance, '\n');
 }
 
 main().catch((err) => {
