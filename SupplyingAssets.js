@@ -39,6 +39,14 @@ const main = async function() {
     let cTokenBalance = await compoundCEthContract.methods.balanceOf(myWalletAddress).call() / 1e8;
 
     console.log("My wallet's cETH Token Balance:", cTokenBalance, '\n');
+
+    let exchangeRateCurrent = await compoundCEthContract.methods.exchangeRateCurrent().call();
+    exchangeRateCurrent = exchangeRateCurrent / Math.pow(10, 18 + ethDecimals - 8);
+    console.log("Current exchange rate from cETH to ETH:", exchangeRateCurrent, '\n');
+
+    console.log('Redeeming the cETH for ETH...', '\n');
+
+    console.log('Exchanging all cETH based on cToken amount...', '\n');
 }
 
 main().catch((err) => {
