@@ -22,12 +22,12 @@ const main = async function() {
     console.log('Supplying ETH to the Compound Protocol...', '\n');
     
     // Mint some cETH by supplying ETH to the Compound Protocol
-    /*await compoundCEthContract.methods.mint().send({
+    await compoundCEthContract.methods.mint().send({
         from: myWalletAddress,
         gasLimit: web3.utils.toHex(150000),
         gasPrice: web3.utils.toHex(20000000000),
         value: web3.utils.toHex(web3.utils.toWei('1', 'ether'))
-    });*/
+    });
 
     console.log('cETH "Mint" operation successful.', '\n');
 
@@ -47,6 +47,20 @@ const main = async function() {
     console.log('Redeeming the cETH for ETH...', '\n');
 
     console.log('Exchanging all cETH based on cToken amount...', '\n');
+
+    let redeemBalance = 1 / exchangeRateCurrent;    // for redeeming 1 ETH.
+    console.log("Current exchange rate from ETH to cETH", redeemBalance);
+    await compoundCEthContract.methods.redeem(parseInt(redeemBalance * 1e8, 10)).send({
+        from: myWalletAddress,
+        gasLimit: web3.utils.toHex(500000),
+        gasPrice: web3.utils.toHex(20000000000), // use ethgasstation.info (mainnet only)
+    });
+    
+    cTokenBalance = await compoundCEthContract.methods.balanceOf(myWalletAddress).call() / 1e8;
+    console.log("My wallet's cETH Token Balance:", cTokenBalance);
+
+    ethBalance = await web3.eth.getBalance(myWalletAddress) / Math.pow(10, ethDecimals);
+    console.log("My wallet's ETH balance:", ethBalance, '\n');
 }
 
 main().catch((err) => {
